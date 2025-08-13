@@ -354,142 +354,141 @@ const clearFilters = () => {
         onClose={handleCloseModal}
         onSave={handleSaveTask}
         task={editingTask}
-        lists={lists}
+lists={lists}
       />
-</div>
 
-    {/* Bulk Action Toolbar */}
-    {showBulkActions && (
-      <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-white rounded-2xl shadow-2xl border border-gray-200 p-4 z-50 min-w-[320px] max-w-[90vw]">
-        {!bulkEditMode ? (
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <div className="h-8 w-8 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center">
-                <span className="text-white text-sm font-semibold">{selectedTasks.length}</span>
+      {/* Bulk Action Toolbar */}
+      {showBulkActions && (
+        <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-white rounded-2xl shadow-2xl border border-gray-200 p-4 z-50 min-w-[320px] max-w-[90vw]">
+          {!bulkEditMode ? (
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-2">
+                <div className="h-8 w-8 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center">
+                  <span className="text-white text-sm font-semibold">{selectedTasks.length}</span>
+                </div>
+                <span className="text-sm text-gray-600">
+                  {selectedTasks.length} task{selectedTasks.length > 1 ? 's' : ''} selected
+                </span>
               </div>
-              <span className="text-sm text-gray-600">
-                {selectedTasks.length} task{selectedTasks.length > 1 ? 's' : ''} selected
-              </span>
-            </div>
-            
-            <div className="flex items-center gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => handleBulkEdit('dueDate')}
-                disabled={isBulkLoading}
-                className="h-8"
-              >
-                <ApperIcon name="Calendar" size={14} />
-                Due Date
-              </Button>
               
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => handleBulkEdit('priority')}
-                disabled={isBulkLoading}
-                className="h-8"
-              >
-                <ApperIcon name="Flag" size={14} />
-                Priority
-              </Button>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleBulkEdit('dueDate')}
+                  disabled={isBulkLoading}
+                  className="h-8"
+                >
+                  <ApperIcon name="Calendar" size={14} />
+                  Due Date
+                </Button>
+                
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleBulkEdit('priority')}
+                  disabled={isBulkLoading}
+                  className="h-8"
+                >
+                  <ApperIcon name="Flag" size={14} />
+                  Priority
+                </Button>
+                
+                <Button
+                  variant="default"
+                  size="sm"
+                  onClick={handleBulkComplete}
+                  disabled={isBulkLoading}
+                  className="h-8"
+                >
+                  {isBulkLoading ? (
+                    <ApperIcon name="Loader2" size={14} className="animate-spin" />
+                  ) : (
+                    <ApperIcon name="Check" size={14} />
+                  )}
+                  Complete
+                </Button>
+                
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={clearSelection}
+                  disabled={isBulkLoading}
+                  className="h-8"
+                >
+                  <ApperIcon name="X" size={14} />
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-gray-900">
+                  Edit {bulkEditMode === 'dueDate' ? 'Due Date' : 'Priority'} for {selectedTasks.length} task{selectedTasks.length > 1 ? 's' : ''}
+                </span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={cancelBulkEdit}
+                  className="h-6 w-6 p-0"
+                >
+                  <ApperIcon name="X" size={12} />
+                </Button>
+              </div>
               
-              <Button
-                variant="default"
-                size="sm"
-                onClick={handleBulkComplete}
-                disabled={isBulkLoading}
-                className="h-8"
-              >
-                {isBulkLoading ? (
-                  <ApperIcon name="Loader2" size={14} className="animate-spin" />
-                ) : (
-                  <ApperIcon name="Check" size={14} />
-                )}
-                Complete
-              </Button>
+              {bulkEditMode === 'dueDate' && (
+                <Input
+                  type="date"
+                  value={bulkDueDate}
+                  onChange={(e) => setBulkDueDate(e.target.value)}
+                  className="h-9"
+                  placeholder="Select due date"
+                />
+              )}
               
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={clearSelection}
-                disabled={isBulkLoading}
-                className="h-8"
-              >
-                <ApperIcon name="X" size={14} />
-              </Button>
+              {bulkEditMode === 'priority' && (
+                <Select
+                  value={bulkPriority}
+                  onChange={(e) => setBulkPriority(e.target.value)}
+                  className="h-9"
+                >
+                  <option value="">Select priority</option>
+                  <option value="low">Low Priority</option>
+                  <option value="medium">Medium Priority</option>
+                  <option value="high">High Priority</option>
+                </Select>
+              )}
+              
+              <div className="flex items-center justify-end gap-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={cancelBulkEdit}
+                  disabled={isBulkLoading}
+                  className="h-8"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="default"
+                  size="sm"
+                  onClick={saveBulkEdit}
+                  disabled={isBulkLoading || (!bulkDueDate && !bulkPriority)}
+                  className="h-8"
+                >
+                  {isBulkLoading ? (
+                    <ApperIcon name="Loader2" size={14} className="animate-spin" />
+                  ) : (
+                    <ApperIcon name="Check" size={14} />
+                  )}
+                  Save
+                </Button>
+              </div>
             </div>
-          </div>
-        ) : (
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-gray-900">
-                Edit {bulkEditMode === 'dueDate' ? 'Due Date' : 'Priority'} for {selectedTasks.length} task{selectedTasks.length > 1 ? 's' : ''}
-              </span>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={cancelBulkEdit}
-                className="h-6 w-6 p-0"
-              >
-                <ApperIcon name="X" size={12} />
-              </Button>
-            </div>
-            
-            {bulkEditMode === 'dueDate' && (
-              <Input
-                type="date"
-                value={bulkDueDate}
-                onChange={(e) => setBulkDueDate(e.target.value)}
-                className="h-9"
-                placeholder="Select due date"
-              />
-            )}
-            
-            {bulkEditMode === 'priority' && (
-              <Select
-                value={bulkPriority}
-                onChange={(e) => setBulkPriority(e.target.value)}
-                className="h-9"
-              >
-                <option value="">Select priority</option>
-                <option value="low">Low Priority</option>
-                <option value="medium">Medium Priority</option>
-                <option value="high">High Priority</option>
-              </Select>
-            )}
-            
-            <div className="flex items-center justify-end gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={cancelBulkEdit}
-                disabled={isBulkLoading}
-                className="h-8"
-              >
-                Cancel
-              </Button>
-              <Button
-                variant="default"
-                size="sm"
-                onClick={saveBulkEdit}
-                disabled={isBulkLoading || (!bulkDueDate && !bulkPriority)}
-                className="h-8"
-              >
-                {isBulkLoading ? (
-                  <ApperIcon name="Loader2" size={14} className="animate-spin" />
-                ) : (
-                  <ApperIcon name="Check" size={14} />
-                )}
-                Save
-              </Button>
-            </div>
-          </div>
-        )}
-      </div>
-    )}
+          )}
+        </div>
+      )}
+    </div>
   )
 }
-
 export default TasksPage
