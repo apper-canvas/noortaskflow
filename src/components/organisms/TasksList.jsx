@@ -9,7 +9,10 @@ const TasksList = ({
   onToggleComplete, 
   onEditTask, 
   onDeleteTask,
-  className 
+  className,
+  selectedTasks = [],
+  onTaskSelectionChange,
+  showSelection = false
 }) => {
   const [draggedTask, setDraggedTask] = useState(null)
 
@@ -68,13 +71,16 @@ const TasksList = ({
             onDragEnd={handleDragEnd}
             className="cursor-move"
           >
-            <TaskCard
+<TaskCard
               task={task}
               onToggleComplete={onToggleComplete}
               onEdit={onEditTask}
               onDelete={onDeleteTask}
               isDragging={draggedTask?.Id === task.Id}
               className="hover:shadow-md"
+              isSelected={selectedTasks.includes(task.Id)}
+              onSelectionChange={onTaskSelectionChange}
+              showSelection={showSelection}
             />
           </motion.div>
         ))}

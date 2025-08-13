@@ -6,12 +6,15 @@ import ApperIcon from "@/components/ApperIcon"
 import { cn } from "@/utils/cn"
 
 const TaskCard = ({ 
-  task, 
+task, 
   onToggleComplete, 
   onEdit, 
   onDelete, 
   className,
-  isDragging = false 
+  isDragging = false,
+  isSelected = false,
+  onSelectionChange,
+  showSelection = false
 }) => {
   const formatDueDate = (date) => {
     if (!date) return null
@@ -43,7 +46,14 @@ const TaskCard = ({
         className
       )}
     >
-      <div className="flex items-start gap-3">
+<div className="flex items-start gap-3">
+        {showSelection && (
+          <Checkbox 
+            checked={isSelected}
+            onChange={() => onSelectionChange?.(task.Id)}
+            className="mt-0.5 flex-shrink-0 border-primary"
+          />
+        )}
         <Checkbox 
           checked={task.status === "completed"}
           onChange={() => onToggleComplete(task.Id)}

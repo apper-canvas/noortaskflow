@@ -65,11 +65,57 @@ class TaskService {
 
     this.tasks.splice(index, 1)
     return true
-  }
+}
 
   async getByListId(listId) {
     await delay()
     return this.tasks.filter(t => t.listId === listId.toString()).map(t => ({ ...t }))
+  }
+
+  async bulkUpdate(taskIds, updateData) {
+    await delay()
+    
+    if (!Array.isArray(taskIds) || taskIds.length === 0) {
+      throw new Error('Task IDs must be a non-empty array')
+    }
+
+    const updatedTasks = []
+    for (const taskId of taskIds) {
+      const taskIndex = this.tasks.findIndex(t => t.Id === parseInt(taskId))
+      if (taskIndex !== -1) {
+        this.tasks[taskIndex] = {
+          ...this.tasks[taskIndex],
+          ...updateData,
+          updatedAt: new Date().toISOString()
+        }
+        updatedTasks.push({ ...this.tasks[taskIndex] })
+      }
+    }
+
+    return updatedTasks
+  }
+
+  async bulkComplete(taskIds) {
+    await delay()
+    
+    if (!Array.isArray(taskIds) || taskIds.length === 0) {
+      throw new Error('Task IDs must be a non-empty array')
+    }
+
+    const completedTasks = []
+    for (const taskId of taskIds) {
+      const taskIndex = this.tasks.findIndex(t => t.Id === parseInt(taskId))
+      if (taskIndex !== -1) {
+        this.tasks[taskIndex] = {
+          ...this.tasks[taskIndex],
+          status: 'completed',
+          updatedAt: new Date().toISOString()
+        }
+        completedTasks.push({ ...this.tasks[taskIndex] })
+      }
+    }
+
+    return completedTasks
   }
 }
 
