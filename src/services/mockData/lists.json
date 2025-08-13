@@ -1,0 +1,37 @@
+[
+  {
+    "Id": 1,
+    "name": "Work Projects",
+    "color": "#5B4FE9",
+    "icon": "Briefcase",
+    "order": 0
+  },
+  {
+    "Id": 2,
+    "name": "Personal Tasks",
+    "color": "#FF6B6B",
+    "icon": "User",
+    "order": 1
+  },
+  {
+    "Id": 3,
+    "name": "Development",
+    "color": "#4ECB71",
+    "icon": "Code",
+    "order": 2
+  },
+  {
+    "Id": 4,
+    "name": "Content & Marketing",
+    "color": "#FFB84D",
+    "icon": "Megaphone",
+    "order": 3
+  },
+  {
+    "Id": 5,
+    "name": "Health & Fitness",
+    "color": "#4DA6FF",
+    "icon": "Heart",
+    "order": 4
+  }
+]
