@@ -1,12 +1,15 @@
-import React from "react"
+import React, { useState } from "react"
 import { useLocation } from "react-router-dom"
 import ListSidebarItem from "@/components/molecules/ListSidebarItem"
+import UploadsHistory from "@/components/molecules/UploadsHistory"
 import ApperIcon from "@/components/ApperIcon"
+import Button from "@/components/atoms/Button"
 import { cn } from "@/utils/cn"
 
 const ListsSidebar = ({ lists, className }) => {
   const location = useLocation()
   const currentListId = location.pathname.split("/").pop()
+  const [showUploads, setShowUploads] = useState(false)
 
   // Add "All Tasks" virtual list
   const allLists = [
@@ -19,7 +22,6 @@ const ListsSidebar = ({ lists, className }) => {
     },
     ...lists
   ]
-
   return (
     <div className={cn("w-80 bg-white border-r border-gray-200 flex flex-col", className)}>
       <div className="p-6 border-b border-gray-100">
@@ -36,22 +38,52 @@ const ListsSidebar = ({ lists, className }) => {
         </div>
       </div>
 
-      <nav className="flex-1 p-4">
-        <div className="space-y-1">
-          <div className="mb-4">
-            <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 px-3">
-              Lists
-            </h2>
+<nav className="flex-1 overflow-y-auto">
+        {/* Lists Section */}
+        <div className="p-4">
+          <div className="space-y-1">
+            <div className="mb-4">
+              <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 px-3">
+                Lists
+              </h2>
+            </div>
+            
+            {allLists.map((list) => (
+              <ListSidebarItem
+                key={list.Id}
+                list={list}
+                isActive={currentListId === list.Id.toString()}
+              />
+            ))}
           </div>
-          
-          {allLists.map((list) => (
-            <ListSidebarItem
-              key={list.Id}
-              list={list}
-              isActive={currentListId === list.Id.toString()}
-            />
-          ))}
         </div>
+
+        {/* Uploads History Toggle */}
+        <div className="border-t border-gray-200 px-4 py-3">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowUploads(!showUploads)}
+            className="w-full justify-between text-xs font-medium text-gray-600 hover:text-gray-900 px-3"
+          >
+            <div className="flex items-center space-x-2">
+              <ApperIcon name="History" size={14} />
+              <span>Upload History</span>
+            </div>
+            <ApperIcon 
+              name={showUploads ? "ChevronUp" : "ChevronDown"} 
+              size={14} 
+              className="text-gray-400"
+            />
+          </Button>
+        </div>
+
+        {/* Uploads History Section */}
+        {showUploads && (
+          <div className="border-t border-gray-200">
+            <UploadsHistory />
+          </div>
+        )}
       </nav>
 
       <div className="p-4 border-t border-gray-100">
